@@ -9,7 +9,7 @@
             <span class="text-sm text-gray-600">{{ task.type }}</span>
         </div>
         <div class="flex justify-between">
-            <button class="bg-gray-500 hover:bg-blue-700 text-white font-semi py-2 px-4 rounded mt-4">Edit</button>
+            <button @click="editTask(task.id)" class="bg-gray-500 hover:bg-blue-700 text-white font-semi py-2 px-4 rounded mt-4">Edit</button>
             <button @click="removeTask(task.id)" class="bg-gray-400 hover:bg-red-700 text-white font-semi py-2 px-4 rounded mt-4">Delete</button>
         </div>
     </div>
@@ -31,8 +31,13 @@ export default defineComponent({
             emit("remove-task", id);
         };
 
+        const editTask = (id: number) => {
+            emit("edit-task", id);
+        };
+
         return {
             removeTask,
+            editTask,
         };
     },
 });
