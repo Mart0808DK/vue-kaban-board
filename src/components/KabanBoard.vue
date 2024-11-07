@@ -10,6 +10,13 @@
                         </template>
                     </draggable>
                 </div>
+                <div>
+                    <button @click="handleAddTask(column.id)" class="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded">Add Task</button>
+                </div>
+            </div>
+            <div class="">
+              <button @click="showModal = true" class="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded">Add Column</button>
+            <AddColumnForm v-if="showModal" @add-column="handleAddColumn" @close="showModal = false" />
             </div>
         </div>
     </div>
@@ -44,168 +51,40 @@ interface DraggableEvent {
     };
 }
 
+import AddColumnForm from "./AddColomnForm.vue";
 export default defineComponent({
     name: "KabanBoard",
     components: {
         TaskCard,
         draggable,
+        AddColumnForm, 
     },
     setup() {
+        let showModal = ref(false);
+        
+        
         const columns = ref<Column[]>([]);
 
-        onMounted(() => {
-            const storedColumns = localStorage.getItem("columns");
-            if (storedColumns) {
-                columns.value = JSON.parse(storedColumns);
-            } else {
-                columns.value = [
-                    {
-                        id: 1,
-                        title: "Product Backlog",
-                        tasks: [
-                            {
-                                id: 1,
-                                title: "Add discount code to checkout page",
-                                date: "Sep 14",
-                                type: "Feature Request",
-                            },
-                            {
-                                id: 2,
-                                title: "Provide documentation on integrations",
-                                date: "Sep 12",
-                                type: "Backend",
-                            },
-                            {
-                                id: 3,
-                                title: "Design shopping cart dropdown",
-                                date: "Sep 9",
-                                type: "Design",
-                            },
-                        ],
-                    },
-                    {
-                        id: 2,
-                        title: "In Progress",
-                        tasks: [
-                            {
-                                id: 1,
-                                title: "Redesign landing page",
-                                date: "Sep 10",
-                                type: "Design",
-                            },
-                            {
-                                id: 2,
-                                title: "Implement user profile page",
-                                date: "Sep 11",
-                                type: "Frontend",
-                            },
-                            {
-                                id: 3,
-                                title: "Fix bugs in user profile page",
-                                date: "Sep 11",
-                                type: "Bug",
-                            },
-                        ],
-                    },
-                    {
-                        id: 3,
-                        title: "Blocked",
-                        tasks: [
-                            {
-                                id: 1,
-                                title: "Add payment gateway integration",
-                                date: "Sep 13",
-                                type: "Backend",
-                            },
-                            {
-                                id: 2,
-                                title: "Update product images",
-                                date: "Sep 12",
-                                type: "Design",
-                            },
-                            {
-                                id: 3,
-                                title: "Optimize site performance",
-                                date: "Sep 14",
-                                type: "Backend",
-                            },
-                            {
-                                id: 4,
-                                title: "Review code for security vulnerabilities",
-                                date: "Sep 15",
-                                type: "Backend",
-                            },
-                            {
-                                id: 5,
-                                title: "Update product descriptions",
-                                date: "Sep 13",
-                                type: "Content",
-                            },
-                            {
-                                id: 6,
-                                title: "Add new feature to product page",
-                                date: "Sep 15",
-                                type: "Feature Request",
-                            },
-                        ],
-                    },
-                    {
-                        id: 4,
-                        title: "Review",
-                        tasks: [
-                            {
-                                id: 1,
-                                title: "Fix bugs in user profile page",
-                                date: "Sep 11",
-                                type: "Bug",
-                            },
-                            {
-                                id: 2,
-                                title: "Update product images",
-                                date: "Sep 12",
-                                type: "Design",
-                            },
-                            {
-                                id: 3,
-                                title: "Optimize site performance",
-                                date: "Sep 14",
-                                type: "Backend",
-                            },
-                            {
-                                id: 4,
-                                title: "Review code for security vulnerabilities",
-                                date: "Sep 15",
-                                type: "Backend",
-                            },
-                        ],
-                    },
-                    {
-                        id: 5,
-                        title: "Done",
-                        tasks: [
-                            {
-                                id: 1,
-                                title: "Provide documentation on integrations",
-                                date: "Sep 12",
-                                type: "Backend",
-                            },
-                            {
-                                id: 2,
-                                title: "Design shopping cart dropdown",
-                                date: "Sep 9",
-                                type: "Design",
-                            },
-                        ],
-                    },
-                ];
-            }
-        });
+        // function handleAddTask(columnId: number) {
+        //     columns.value[columnId-1].tasks.push({
+        //         title: "New Task",
+        //         date: "Sep 16",
+        //         type: "Feature Request",
+        //     });
+          
+        // }
 
-        watch(columns, (newColumns) => {
-            localStorage.setItem("columns", JSON.stringify(newColumns));
-        }, { deep: true });
+         function handleAddColumn(title: string) {
+          const newId = columns.value.length > 0 ? Math.max(...columns.value.map(c => c.id)) + 1 : 1;
+            columns.value.push({
+                id: newId,
+                title: title,
+                tasks: [],
+            });
+            showModal.value = false;
+         }
 
-        const onTaskChange = (event: DraggableEvent) => {
+         const onTaskChange = (event: DraggableEvent) => {
             if (event.removed) {
                 const task = event.removed.element;
                 const oldIndex = event.removed.oldIndex;
@@ -220,12 +99,175 @@ export default defineComponent({
             }
             console.log("Columns", columns.value);
         };
+            
+          
+    
+            onMounted(() => {
+                const storedColumns = localStorage.getItem("columns");
+                if (storedColumns) {
+                    columns.value = JSON.parse(storedColumns);
+                } else {
+                    columns.value = [
+                        {
+                            id: 1,
+                            title: "Product Backlog",
+                            tasks: [
+                                {
+                                    id: 1,
+                                    title: "Add discount code to checkout page",
+                                    date: "Sep 14",
+                                    type: "Feature Request",
+                                },
+                                {
+                                    id: 2,
+                                    title: "Provide documentation on integrations",
+                                    date: "Sep 12",
+                                    type: "Backend",
+                                },
+                                {
+                                    id: 3,
+                                    title: "Design shopping cart dropdown",
+                                    date: "Sep 9",
+                                    type: "Design",
+                                },
+                            ],
+                        },
+                        {
+                            id: 2,
+                            title: "In Progress",
+                            tasks: [
+                                {
+                                    id: 1,
+                                    title: "Redesign landing page",
+                                    date: "Sep 10",
+                                    type: "Design",
+                                },
+                                {
+                                    id: 2,
+                                    title: "Implement user profile page",
+                                    date: "Sep 11",
+                                    type: "Frontend",
+                                },
+                                {
+                                    id: 3,
+                                    title: "Fix bugs in user profile page",
+                                    date: "Sep 11",
+                                    type: "Bug",
+                                },
+                            ],
+                        },
+                        {
+                            id: 3,
+                            title: "Blocked",
+                            tasks: [
+                                {
+                                    id: 1,
+                                    title: "Add payment gateway integration",
+                                    date: "Sep 13",
+                                    type: "Backend",
+                                },
+                                {
+                                    id: 2,
+                                    title: "Update product images",
+                                    date: "Sep 12",
+                                    type: "Design",
+                                },
+                                {
+                                    id: 3,
+                                    title: "Optimize site performance",
+                                    date: "Sep 14",
+                                    type: "Backend",
+                                },
+                                {
+                                    id: 4,
+                                    title: "Review code for security vulnerabilities",
+                                    date: "Sep 15",
+                                    type: "Backend",
+                                },
+                                {
+                                    id: 5,
+                                    title: "Update product descriptions",
+                                    date: "Sep 13",
+                                    type: "Content",
+                                },
+                                {
+                                    id: 6,
+                                    title: "Add new feature to product page",
+                                    date: "Sep 15",
+                                    type: "Feature Request",
+                                },
+                            ],
+                        },
+                        {
+                            id: 4,
+                            title: "Review",
+                            tasks: [
+                                {
+                                    id: 1,
+                                    title: "Fix bugs in user profile page",
+                                    date: "Sep 11",
+                                    type: "Bug",
+                                },
+                                {
+                                    id: 2,
+                                    title: "Update product images",
+                                    date: "Sep 12",
+                                    type: "Design",
+                                },
+                                {
+                                    id: 3,
+                                    title: "Optimize site performance",
+                                    date: "Sep 14",
+                                    type: "Backend",
+                                },
+                                {
+                                    id: 4,
+                                    title: "Review code for security vulnerabilities",
+                                    date: "Sep 15",
+                                    type: "Backend",
+                                },
+                            ],
+                        },
+                        {
+                            id: 5,
+                            title: "Done",
+                            tasks: [
+                                {
+                                    id: 1,
+                                    title: "Provide documentation on integrations",
+                                    date: "Sep 12",
+                                    type: "Backend",
+                                },
+                                {
+                                    id: 2,
+                                    title: "Design shopping cart dropdown",
+                                    date: "Sep 9",
+                                    type: "Design",
+                                },
+                            ],
+                        },
+                    ];
+                }
+            });
 
-        return {
-            columns,
-            onTaskChange,
-        };
-    },
+            
+    
+            watch(columns, (newColumns) => {
+                localStorage.setItem("columns", JSON.stringify(newColumns));
+            }, { deep: true });
+    
+            return {
+                columns,
+                // handleAddTask,
+                onTaskChange,
+                showModal,
+                handleAddColumn,
+            };
+        },
+
+    
+
+    
 });
 </script>
 
