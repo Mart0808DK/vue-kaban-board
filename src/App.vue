@@ -1,7 +1,10 @@
 <template>
-  <div class="flex justify-center ">
-    <div class="min-h-screen flex overflow-x-scroll py-12">
-      <KabanBoard/>
+  <div>
+    <NavBar/>
+    <div class="flex justify-center ">
+      <div class="min-h-screen flex overflow-x-scroll py-12">
+        <KabanBoard/>
+      </div>
     </div>
   </div>
 </template>
@@ -9,11 +12,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import KabanBoard from './components/KabanBoard.vue';
+import NavBar from './components/NavBar.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
-    KabanBoard
+    KabanBoard,
+    NavBar
+
   }
 });
 </script>
