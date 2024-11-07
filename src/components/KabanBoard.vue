@@ -10,6 +10,13 @@
                         </template>
                     </draggable>
                 </div>
+                <div>
+                    <button @click="handleAddTask(column.id)" class="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded">Add Task</button>
+                </div>
+            </div>
+            <div class="">
+              <button @click="showModal = true" class="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded">Add Column</button>
+            <AddColumnForm v-if="showModal" @add-column="handleAddColumn" @close="showModal = false" />
             </div>
         </div>
     </div>
@@ -19,13 +26,16 @@
 import { defineComponent, ref } from "vue";
 import TaskCard from "./TaskCard.vue";
 import draggable from "vuedraggable";
+import AddColumnForm from "./AddColomnForm.vue";
 export default defineComponent({
     name: "KabanBoard",
     components: {
         TaskCard,
         draggable,
+        AddColumnForm,
     },
     setup() {
+        let showModal = ref(false);
         let columns = ref([
             {
                 id: 1,
@@ -128,10 +138,37 @@ export default defineComponent({
             },
         ]);
 
+        console.log(columns.value);
+        
+
+        function handleAddTask(columnId: number) {
+            columns.value[columnId-1].tasks.push({
+                title: "New Task",
+                date: "Sep 16",
+                type: "Feature Request",
+            });
+          
+        }
+
+         function handleAddColumn(title: string) {
+          const newId = columns.value.length > 0 ? Math.max(...columns.value.map(c => c.id)) + 1 : 1;
+            columns.value.push({
+                id: newId,
+                title: title,
+                tasks: [],
+            });
+            showModal.value = false;
+            
+          
+        }
+
     
 
         return {
             columns,
+            handleAddColumn,
+            showModal,
+            handleAddTask
         };
     },
 });
