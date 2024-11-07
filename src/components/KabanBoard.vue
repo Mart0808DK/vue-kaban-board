@@ -174,15 +174,14 @@ export default defineComponent({
                 const oldIndex = event.removed.oldIndex;
                 const columnId = columns.value.findIndex((column) => column.tasks.includes(task));
                 columns.value[columnId].tasks.splice(oldIndex, 1);
-                console.log("Task removed from column", columnId);
             }
             if (event.added) {
                 const task = event.added.element;
                 const newIndex = event.added.newIndex;
                 const columnId = columns.value.findIndex((column) => column.tasks.includes(task));
                 columns.value[columnId].tasks.splice(newIndex, 0, task);
-                console.log("Task added to column", columnId);
             }
+            console.log("Columns", columns.value);
             
             
         };
