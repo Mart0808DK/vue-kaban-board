@@ -1,5 +1,9 @@
 <template>
-  <KabanBoard msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="flex justify-center ">
+    <div class="min-h-screen flex overflow-x-scroll py-12">
+      <KabanBoard/>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">

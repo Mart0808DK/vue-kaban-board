@@ -1,48 +1,56 @@
 <template>
-    <div>
-        <h3>{{ msg }}</h3>
+    <div class="flex justify-center">
+        <div class="min-h-screen flex overflow-x-scroll py-12">
+            <div v-for="column in columns" :key="column.id" class="bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4">
+                <h3 class="text-gray-700 font-semibold tracking-wide">{{ column.title }}</h3>
+                <div class="mt-4">
+                    <draggable :list="column.tasks" class="flex flex-col" group="tasks" ghost-class="ghost-card">
+                        <template #item="{ element: task }">
+                            <TaskCard :task="task" />
+                        </template>
+                    </draggable>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import vuedraggable from "vuedraggable";
-
+import { defineComponent, ref } from "vue";
+import TaskCard from "./TaskCard.vue";
+import draggable from "vuedraggable";
 export default defineComponent({
     name: "KabanBoard",
-    props: {
-        msg: String,
+    components: {
+        TaskCard,
+        draggable,
     },
     setup() {
-        const columns = [
+        let columns = ref([
             {
+                id: 1,
                 title: "Product Backlog",
                 tasks: [
                     {
-                        id: 1,
                         title: "Add discount code to checkout page",
                         date: "Sep 14",
                         type: "Feature Request",
                     },
                     {
-                        id: 2,
                         title: "Provide documentation on integrations",
                         date: "Sep 12",
                     },
                     {
-                        id: 3,
                         title: "Design shopping cart dropdown",
                         date: "Sep 9",
                         type: "Design",
                     },
                     {
-                        id: 4,
                         title: "Add discount code to checkout page",
                         date: "Sep 14",
                         type: "Feature Request",
                     },
                     {
-                        id: 5,
                         title: "Test checkout flow",
                         date: "Sep 15",
                         type: "QA",
@@ -50,45 +58,20 @@ export default defineComponent({
                 ],
             },
             {
-                title: "Sprint Backlog",
-                tasks: [
-                    {
-                        id: 6,
-                        title: "Design shopping cart dropdown",
-                        date: "Sep 9",
-                        type: "Design",
-                    },
-                    {
-                        id: 7,
-                        title: "Add discount code to checkout page",
-                        date: "Sep 14",
-                        type: "Feature Request",
-                    },
-                    {
-                        id: 8,
-                        title: "Provide documentation on integrations",
-                        date: "Sep 12",
-                        type: "Backend",
-                    },
-                ],
-            },
-            {
+                id: 2,
                 title: "In Progress",
                 tasks: [
                     {
-                        id: 6,
                         title: "Design shopping cart dropdown",
                         date: "Sep 9",
                         type: "Design",
                     },
                     {
-                        id: 7,
                         title: "Add discount code to checkout page",
                         date: "Sep 14",
                         type: "Feature Request",
                     },
                     {
-                        id: 8,
                         title: "Provide documentation on integrations",
                         date: "Sep 12",
                         type: "Backend",
@@ -96,16 +79,15 @@ export default defineComponent({
                 ],
             },
             {
-                title: "Review",
+                id: 3,
+                title: "Blocked",
                 tasks: [
                     {
-                        id: 9,
-                        title: "Test checkout flow",
-                        date: "Sep 15",
-                        type: "QA",
+                        title: "Provide documentation on integrations",
+                        date: "Sep 12",
+                        type: "Backend",
                     },
                     {
-                        id: 10,
                         title: "Design shopping cart dropdown",
                         date: "Sep 9",
                         type: "Design",
@@ -113,17 +95,41 @@ export default defineComponent({
                 ],
             },
             {
-                title: "Done",
+                id: 4,
+                title: "Review",
                 tasks: [
                     {
-                        description: "Task 7",
+                        title: "Provide documentation on integrations",
+                        date: "Sep 12",
+                        type: "Backend",
                     },
                     {
-                        description: "Task 8",
+                        title: "Design shopping cart dropdown",
+                        date: "Sep 9",
+                        type: "Design",
                     },
                 ],
             },
-        ];
+            {
+                id: 5,
+                title: "Done",
+                tasks: [
+                    {
+                        title: "Provide documentation on integrations",
+                        date: "Sep 12",
+                        type: "Backend",
+                    },
+                    {
+                        title: "Design shopping cart dropdown",
+                        date: "Sep 9",
+                        type: "Design",
+                    },
+                ],
+            },
+        ]);
+
+    
+
         return {
             columns,
         };
@@ -131,5 +137,14 @@ export default defineComponent({
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+.column-width {
+    min-width: 320px;
+    width: 320px;
+}
+.ghost-card {
+    opacity: 0.5;
+    background: #f7fafc;
+    border: 1px solid #4299e1;
+}
+</style>
