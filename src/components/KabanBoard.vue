@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted, watch } from "vue";
 import TaskCard from "./TaskCard.vue";
 import draggable from "vuedraggable";
 
@@ -24,8 +24,9 @@ interface Task {
     id: number;
     title: string;
     date: string;
-    type: string;
+    type?: string;
 }
+
 interface Column {
     id: number;
     title: string;
@@ -42,6 +43,7 @@ interface DraggableEvent {
         newIndex: number;
     };
 }
+
 export default defineComponent({
     name: "KabanBoard",
     components: {
@@ -49,125 +51,160 @@ export default defineComponent({
         draggable,
     },
     setup() {
-        let columns = ref<Column[]>([
-            {
-                id: 1,
-                title: "Product Backlog",
-                tasks: [
-                    {   
+        const columns = ref<Column[]>([]);
+
+        onMounted(() => {
+            const storedColumns = localStorage.getItem("columns");
+            if (storedColumns) {
+                columns.value = JSON.parse(storedColumns);
+            } else {
+                columns.value = [
+                    {
                         id: 1,
-                        title: "Add discount code to checkout page",
-                        date: "Sep 14",
-                        type: "Feature Request",
-                    },
-                    {   
-                        id: 2,
-                        title: "Provide documentation on integrations",
-                        date: "Sep 12",
-                        type: "Backend",
-                    },
-                    {   
-                        id: 3,
-                        title: "Design shopping cart dropdown",
-                        date: "Sep 9",
-                        type: "Design",
-                    },
-                    {   
-                        id: 4,
-                        title: "Add discount code to checkout page",
-                        date: "Sep 14",
-                        type: "Feature Request",
-                    },
-                    {   
-                        id: 5,
-                        title: "Test checkout flow",
-                        date: "Sep 15",
-                        type: "QA",
-                    },
-                ],
-            },
-            {
-                id: 2,
-                title: "In Progress",
-                tasks: [
-                    {   
-                        id: 6,
-                        title: "Design shopping cart dropdown",
-                        date: "Sep 9",
-                        type: "Design",
-                    },
-                    {   
-                        id: 7,
-                        title: "Add discount code to checkout page",
-                        date: "Sep 14",
-                        type: "Feature Request",
-                    },
-                    {   
-                        id: 8,
-                        title: "Provide documentation on integrations",
-                        date: "Sep 12",
-                        type: "Backend",
-                    },
-                ],
-            },
-            {
-                id: 3,
-                title: "Blocked",
-                tasks: [
-                    {   
-                        id: 9,
-                        title: "Provide documentation on integrations",
-                        date: "Sep 12",
-                        type: "Backend",
+                        title: "Product Backlog",
+                        tasks: [
+                            {
+                                id: 1,
+                                title: "Add discount code to checkout page",
+                                date: "Sep 14",
+                                type: "Feature Request",
+                            },
+                            {
+                                id: 2,
+                                title: "Provide documentation on integrations",
+                                date: "Sep 12",
+                                type: "Backend",
+                            },
+                            {
+                                id: 3,
+                                title: "Design shopping cart dropdown",
+                                date: "Sep 9",
+                                type: "Design",
+                            },
+                        ],
                     },
                     {
-                        id: 10,
-                        title: "Design shopping cart dropdown",
-                        date: "Sep 9",
-                        type: "Design",
+                        id: 2,
+                        title: "In Progress",
+                        tasks: [
+                            {
+                                id: 1,
+                                title: "Redesign landing page",
+                                date: "Sep 10",
+                                type: "Design",
+                            },
+                            {
+                                id: 2,
+                                title: "Implement user profile page",
+                                date: "Sep 11",
+                                type: "Frontend",
+                            },
+                            {
+                                id: 3,
+                                title: "Fix bugs in user profile page",
+                                date: "Sep 11",
+                                type: "Bug",
+                            },
+                        ],
                     },
-                ],
-            },
-            {
-                id: 4,
-                title: "Review",
-                tasks: [
-                    {   
-                        id: 11,
-                        title: "Provide documentation on integrations",
-                        date: "Sep 12",
-                        type: "Backend",
+                    {
+                        id: 3,
+                        title: "Blocked",
+                        tasks: [
+                            {
+                                id: 1,
+                                title: "Add payment gateway integration",
+                                date: "Sep 13",
+                                type: "Backend",
+                            },
+                            {
+                                id: 2,
+                                title: "Update product images",
+                                date: "Sep 12",
+                                type: "Design",
+                            },
+                            {
+                                id: 3,
+                                title: "Optimize site performance",
+                                date: "Sep 14",
+                                type: "Backend",
+                            },
+                            {
+                                id: 4,
+                                title: "Review code for security vulnerabilities",
+                                date: "Sep 15",
+                                type: "Backend",
+                            },
+                            {
+                                id: 5,
+                                title: "Update product descriptions",
+                                date: "Sep 13",
+                                type: "Content",
+                            },
+                            {
+                                id: 6,
+                                title: "Add new feature to product page",
+                                date: "Sep 15",
+                                type: "Feature Request",
+                            },
+                        ],
                     },
-                    {   
-                        id: 12,
-                        title: "Design shopping cart dropdown",
-                        date: "Sep 9",
-                        type: "Design",
+                    {
+                        id: 4,
+                        title: "Review",
+                        tasks: [
+                            {
+                                id: 1,
+                                title: "Fix bugs in user profile page",
+                                date: "Sep 11",
+                                type: "Bug",
+                            },
+                            {
+                                id: 2,
+                                title: "Update product images",
+                                date: "Sep 12",
+                                type: "Design",
+                            },
+                            {
+                                id: 3,
+                                title: "Optimize site performance",
+                                date: "Sep 14",
+                                type: "Backend",
+                            },
+                            {
+                                id: 4,
+                                title: "Review code for security vulnerabilities",
+                                date: "Sep 15",
+                                type: "Backend",
+                            },
+                        ],
                     },
-                ],
-            },
-            {
-                id: 5,
-                title: "Done",
-                tasks: [
-                    {   
-                        id: 13,
-                        title: "Provide documentation on integrations",
-                        date: "Sep 12",
-                        type: "Backend",
+                    {
+                        id: 5,
+                        title: "Done",
+                        tasks: [
+                            {
+                                id: 1,
+                                title: "Provide documentation on integrations",
+                                date: "Sep 12",
+                                type: "Backend",
+                            },
+                            {
+                                id: 2,
+                                title: "Design shopping cart dropdown",
+                                date: "Sep 9",
+                                type: "Design",
+                            },
+                        ],
                     },
-                    {   
-                        id: 14,
-                        title: "Design shopping cart dropdown",
-                        date: "Sep 9",
-                        type: "Design",
-                    },
-                ],
-            },
-        ]);
+                ];
+            }
+        });
 
-        
-        
+        watch(columns, (newColumns) => {
+            localStorage.setItem("columns", JSON.stringify(newColumns));
+        }, { deep: true });
+
         const onTaskChange = (event: DraggableEvent) => {
             if (event.removed) {
                 const task = event.removed.element;
@@ -182,10 +219,7 @@ export default defineComponent({
                 columns.value[columnId].tasks.splice(newIndex, 0, task);
             }
             console.log("Columns", columns.value);
-            
-            
         };
-    
 
         return {
             columns,
