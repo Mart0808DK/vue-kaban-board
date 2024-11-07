@@ -39,6 +39,7 @@ export default defineComponent({
                     {
                         title: "Provide documentation on integrations",
                         date: "Sep 12",
+                        type: "Backend",
                     },
                     {
                         title: "Design shopping cart dropdown",
