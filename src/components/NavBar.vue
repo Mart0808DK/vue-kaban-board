@@ -19,5 +19,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Ingen yderligere styling nødvendig, da vi bruger Tailwind CSS */
 </style>
