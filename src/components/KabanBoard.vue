@@ -288,7 +288,6 @@ export default defineComponent({
                 const columnId = columns.value.findIndex(column => column.tasks.includes(task));
                 columns.value[columnId].tasks.splice(newIndex, 0, task);
             }
-            console.log("Columns", columns.value);
         };
 
         watch(
