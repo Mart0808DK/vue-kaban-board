@@ -9,8 +9,8 @@
             <span class="text-sm text-gray-600">{{ task.type }}</span>
         </div>
         <div class="flex justify-between">
-            <button @click="showEditModal(task.id)" class="bg-gray-500 hover:bg-blue-700 text-white font-semi py-2 px-4 rounded mt-4">Edit</button>
-            <button @click="removeTask(task.id)" class="bg-gray-400 hover:bg-red-700 text-white font-semi py-2 px-4 rounded mt-4">Delete</button>
+            <button @click="showEditModal(task.id)" class="bg-gray-500 hover:bg-gray-400 text-white font-semi py-2 px-4 rounded mt-4">Edit</button>
+            <button @click="removeTask(task.id)" class="bg-gray-400 hover:bg-gray-300 text-white font-semi py-2 px-4 rounded mt-4">Delete</button>
         </div>
         <TaskForm v-if="isEditModalVisible" :task="task" @submit="handleEditSubmit" @close="isEditModalVisible = false" />
     </div>
