@@ -6,7 +6,7 @@
                 <div class="mt-4">
                     <draggable :list="column.tasks" class="flex flex-col" group="tasks" ghost-class="ghost-card" @change="onTaskChange">
                         <template #item="{ element: task }">
-                            <TaskCard :task="task" @remove-task="removeTask" />
+                            <TaskCard :task="task" @edit-task="updateTask" @remove-task="removeTask" />
                         </template>
                     </draggable>
                 </div>
@@ -26,8 +26,9 @@
 import { defineComponent, ref, onMounted, watch } from "vue";
 import TaskCard from "./TaskCard.vue";
 import draggable from "vuedraggable";
+import AddColumnForm from "./AddColomnForm.vue";
 
-interface Task {
+export interface Task {
     id: number;
     title: string;
     description: string;
@@ -52,7 +53,6 @@ interface DraggableEvent {
     };
 }
 
-import AddColumnForm from "./AddColomnForm.vue";
 export default defineComponent({
     name: "KabanBoard",
     components: {
@@ -64,8 +64,6 @@ export default defineComponent({
         let showModal = ref(false);
 
         const columns = ref<Column[]>([]);
-
-        
 
         onMounted(() => {
             const storedColumns = localStorage.getItem("columns");
@@ -233,6 +231,20 @@ export default defineComponent({
             }
         });
 
+        const updateTask = (updatedTask: Task) => {
+            columns.value.forEach(column => {
+                const taskIndex = column.tasks.findIndex(task => task.id === updatedTask.id);
+                if (taskIndex !== -1) {
+                    column.tasks[taskIndex] = updatedTask;
+                }
+            });
+            saveColumnsToLocalStorage();
+        };
+
+        const saveColumnsToLocalStorage = () => {
+            localStorage.setItem("columns", JSON.stringify(columns.value));
+        };
+
         const removeTask = (taskId: number) => {
             for (const column of columns.value) {
                 const taskIndex = column.tasks.findIndex(task => task.id === taskId);
@@ -249,6 +261,7 @@ export default defineComponent({
                 title: "New Task",
                 description: "Description of the task",
                 date: "Sep 15",
+                type: "Feature Request",
             });
         }
 
@@ -288,9 +301,10 @@ export default defineComponent({
 
         return {
             columns,
+            showModal,
+            updateTask,
             handleAddTask,
             onTaskChange,
-            showModal,
             handleAddColumn,
             removeTask,
         };

@@ -9,14 +9,17 @@
             <span class="text-sm text-gray-600">{{ task.type }}</span>
         </div>
         <div class="flex justify-between">
-            <button @click="editTask(task.id)" class="bg-gray-500 hover:bg-blue-700 text-white font-semi py-2 px-4 rounded mt-4">Edit</button>
+            <button @click="showEditModal(task.id)" class="bg-gray-500 hover:bg-blue-700 text-white font-semi py-2 px-4 rounded mt-4">Edit</button>
             <button @click="removeTask(task.id)" class="bg-gray-400 hover:bg-red-700 text-white font-semi py-2 px-4 rounded mt-4">Delete</button>
         </div>
+        <TaskForm v-if="isEditModalVisible" :task="task" @submit="handleEditSubmit" @close="isEditModalVisible = false" />
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import TaskForm from "./TaskForm.vue";
+import { Task} from "./KabanBoard.vue";
 
 export default defineComponent({
     name: "TaskCard",
@@ -26,18 +29,32 @@ export default defineComponent({
             required: true,
         },
     },
+    components: {
+        TaskForm,
+    },
     setup(_, { emit }) {
+        const isEditModalVisible = ref(false);
+
         const removeTask = (id: number) => {
             emit("remove-task", id);
         };
 
-        const editTask = (id: number) => {
+        const showEditModal = (id: number) => {
             emit("edit-task", id);
+            isEditModalVisible.value = true;
         };
 
+        const handleEditSubmit = (updatedTask: Task) => {
+            emit("edit-task", updatedTask);
+            isEditModalVisible.value = false;
+        };
+        
+
         return {
+            isEditModalVisible,
+            handleEditSubmit,
+            showEditModal,
             removeTask,
-            editTask,
         };
     },
 });
