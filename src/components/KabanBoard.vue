@@ -14,8 +14,8 @@
                     <button @click="handleAddTask(column.id)" class="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded">Add Task</button>
                 </div>
             </div>
-            <div class="">
-                <button @click="showModal = true" class="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded">Add Column</button>
+            <div>
+                <button @click="showModal = true" class="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded">+</button>
                 <AddColumnForm v-if="showModal" @add-column="handleAddColumn" @close="showModal = false" />
             </div>
         </div>
